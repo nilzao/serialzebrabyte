@@ -2,14 +2,19 @@ package br.com.xht.serialzebrabyte;
 
 public class ExemploTeste extends SerialZebraByte {
 
+	@ByteField(fieldId = (byte) 0x1a)
 	private String a;
 
+	@ByteField(fieldId = (byte) 0x1b)
 	private int b;
 
+	@ByteField(fieldId = (byte) 0x1c)
 	private byte[] c;
 
+	@ByteField(fieldId = (byte) 0x1d)
 	private short d;
 
+	@ByteField(fieldId = (byte) 0x1e)
 	private byte e;
 
 	public String getA() {

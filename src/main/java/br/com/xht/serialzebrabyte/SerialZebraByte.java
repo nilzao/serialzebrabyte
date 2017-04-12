@@ -10,7 +10,7 @@ public class SerialZebraByte {
 
 	private static final int BUFFER_LIMIT = 2048;
 
-	private HashMap<String, Field> fields = new HashMap<>();
+	private HashMap<Byte, Field> fields = new HashMap<>();
 
 	public byte[] serialize() throws Exception {
 		ByteArrayBuffer byteArrayBuffer = new ByteArrayBuffer(BUFFER_LIMIT);
@@ -19,8 +19,9 @@ public class SerialZebraByte {
 		for (Field field : declaredFields) {
 			byte[] fieldValueToByteArray = fieldValueToByteArray(field);
 			if (fieldValueToByteArray != null) {
-				byte[] fieldName = field.getName().getBytes();
-				byteArrayBuffer.append(fieldName, 0, fieldName.length);
+				ByteField annotation = field.getAnnotation(ByteField.class);
+				byte fieldName = annotation.fieldId();
+				byteArrayBuffer.append(fieldName);
 				byteArrayBuffer.append(fieldValueToByteArray, 0, fieldValueToByteArray.length);
 			}
 		}
@@ -71,7 +72,8 @@ public class SerialZebraByte {
 		Field[] declaredFields = this.getClass().getDeclaredFields();
 		Field.setAccessible(declaredFields, Boolean.TRUE);
 		for (Field field : declaredFields) {
-			fields.put(field.getName(), field);
+			ByteField annotation = field.getAnnotation(ByteField.class);
+			fields.put(annotation.fieldId(), field);
 		}
 	}
 
@@ -89,9 +91,8 @@ public class SerialZebraByte {
 		if (start >= data.length) {
 			return -1;
 		}
-		byte[] fieldNameByte = { data[start] };
-		String fieldName = new String(fieldNameByte);
-		Field field = fields.get(fieldName);
+		byte fieldId = data[start];
+		Field field = fields.get(fieldId);
 		return parseDataBytes(data, start, field);
 	}
 

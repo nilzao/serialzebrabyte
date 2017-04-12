@@ -16,4 +16,6 @@ public @interface ByteField {
 
 	public int size() default 1;
 
+	public byte fieldId() default (byte) 0xff;
+
 }
